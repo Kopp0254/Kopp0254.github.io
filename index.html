@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio — Developer & Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'Helvetica Neue', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            50: '#f5f5f7',
+                            100: '#e8e8ed',
+                            200: '#d2d2d7',
+                            300: '#86868b',
+                            400: '#6e6e73',
+                            500: '#48484a',
+                            600: '#2c2c2e',
+                            700: '#1c1c1e',
+                            800: '#141416',
+                            900: '#0a0a0a',
+                            950: '#050505',
+                        },
+                        accent: {
+                            DEFAULT: '#9CAF88',
+                            light: '#B8C9A8',
+                            dark: '#7D9468',
+                            glow: 'rgba(156, 175, 136, 0.15)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+            background-color: #050505;
+            color: #e8e8ed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2c2c2e;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #48484a;
+        }
+
+        /* Nav active link indicator */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 16px;
+            height: 2px;
+            background: #9CAF88;
+            border-radius: 1px;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        /* Card hover lift */
+        .project-card {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(156, 175, 136, 0.08),
+                        0 4px 20px rgba(0, 0, 0, 0.4);
+            border-color: rgba(156, 175, 136, 0.3);
+        }
+
+        /* Reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Hero image ring */
+        .hero-image-ring {
+            background: conic-gradient(from 0deg, #9CAF88, #7D9468, #B8C9A8, #9CAF88);
+            animation: ring-rotate 8s linear infinite;
+        }
+        @keyframes ring-rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Subtle background grid */
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(156, 175, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 175, 136, 0.03) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        /* Gradient orbs */
+        .orb-1 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(156, 175, 136, 0.06) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+        }
+        .orb-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(125, 148, 104, 0.05) 0%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+        }
+
+        /* Social icon hover */
+        .social-icon {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        background-color 0.3s ease,
+                        color 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-4px) scale(1.05);
+            background-color: #9CAF88;
+            color: #050505;
+        }
+
+        /* Timeline dot pulse */
+        .timeline-dot {
+            position: relative;
+        }
+        .timeline-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(156, 175, 136, 0.15);
+            animation: pulse-ring 2.5s ease-out infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        /* View project arrow animation */
+        .view-arrow {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .project-card:hover .view-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Section divider gradient */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(156, 175, 136, 0.15), transparent);
+        }
+
+        /* Mobile nav */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-dark-950 font-inter">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div class="mx-auto max-w-6xl px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-[72px]">
+                <!-- Logo -->
+                <a href="#overview" class="text-lg font-semibold tracking-tight text-dark-50">
+                    portfolio<span class="text-accent">.</span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#overview" class="nav-link text-sm font-medium text-dark-200 hover:text-dark-50 transition-colors duration-300 active">Overview</a>
+                    <a href="#projects" class="nav-link text-sm font-medium text-dark-300 hover:text-dark-50 transition-colors duration-300">Projects</a>
+                    <a href="#internships" class="nav-link text-sm font-medium text-dark-300 hover:text-dark-50 transition-colors duration-300">Internships</a>
+                    <a href="#contact" class="nav-link text-sm font-medium text-dark-300 hover:text-dark-50 transition-colors duration-300">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="menuBtn" class="md:hidden text-dark-200 hover:text-dark-50 transition-colors p-2" aria-label="Toggle menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu md:hidden fixed inset-0 top-0 bg-dark-950/98 backdrop-blur-xl z-40">
+            <div class="flex flex-col items-center justify-center h-full gap-8">
+                <a href="#overview" class="mobile-nav-link text-2xl font-semibold text-dark-100 hover:text-accent transition-colors">Overview</a>
+                <a href="#projects" class="mobile-nav-link text-2xl font-semibold text-dark-100 hover:text-accent transition-colors">Projects</a>
+                <a href="#internships" class="mobile-nav-link text-2xl font-semibold text-dark-100 hover:text-accent transition-colors">Internships</a>
+                <a href="#contact" class="mobile-nav-link text-2xl font-semibold text-dark-100 hover:text-accent transition-colors">Contact</a>
+            </div>
+            <button id="closeMenuBtn" class="absolute top-5 right-6 text-dark-200 hover:text-dark-50 transition-colors p-2" aria-label="Close menu">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 bg-grid pointer-events-none"></div>
+    <div class="orb-1" style="top: -200px; right: -200px;"></div>
+    <div class="orb-2" style="bottom: 20%; left: -100px;"></div>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+
+        <!-- ==================== HERO / OVERVIEW ==================== -->
+        <section id="overview" class="min-h-screen flex items-center pt-20 pb-32 lg:pb-40">
+            <div class="mx-auto max-w-6xl px-6 lg:px-8 w-full">
+                <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+                    
+                    <!-- Hero Image -->
+                    <div class="reveal reveal-delay-1 flex-shrink-0">
+                        <div class="relative">
+                            <!-- Rotating ring -->
+                            <div class="hero-image-ring absolute -inset-[3px] rounded-2xl"></div>
+                            <!-- Image container -->
+                            <div class="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border-2 border-dark-700">
+                                <img src="http://static.photos/people/640x360/101" alt="Profile photo" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Text -->
+                    <div class="text-center lg:text-left max-w-2xl">
+                        <div class="reveal">
+                            <p class="text-accent font-medium text-sm sm:text-base tracking-wide uppercase mb-4">Developer & Designer</p>
+                        </div>
+                        <h1 class="reveal reveal-delay-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-dark-50 leading-[1.1]">
+                            Crafting digital<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-light to-accent">experiences</span>
+                        </h1>
+                        <p class="reveal reveal-delay-2 mt-6 sm:mt-8 text-lg sm:text-xl text-dark-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                            I build elegant, performant, and user-centered applications. Passionate about clean code, thoughtful design, and turning complex problems into simple solutions.
+                        </p>
+                        <div class="reveal reveal-delay-3 mt-8 sm:mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                            <a href="#projects" class="group inline-flex items-center gap-2 bg-accent hover:bg-accent-light text-dark-950 font-semibold px-7 py-3.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/20">
+                                View my work
+                                <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-0.5 transition-transform"></i>
+                            </a>
+                            <a href="#contact" class="inline-flex items-center gap-2 text-dark-200 hover:text-dark-50 font-medium px-7 py-3.5 rounded-full border border-dark-500 hover:border-dark-400 transition-all duration-300">
+                                Get in touch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll indicator -->
+                <div class="reveal reveal-delay-4 hidden lg:flex flex-col items-center mt-20 lg:mt-28 animate-bounce">
+                    <span class="text-xs text-dark-400 uppercase tracking-widest mb-3">Scroll</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-dark-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="section-divider mx-auto max-w-4xl"></div>
+
+        <!-- ==================== PROJECTS ==================== -->
+        <section id="projects" class="py-24 sm:py-32 lg:py-40">
+            <div class="mx-auto max-w-6xl px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="reveal text-center mb-16 sm:mb-20">
+                    <p class="text-accent font-medium text-sm tracking-wide uppercase mb-3">Featured Work</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-dark-50">
+                        Projects
+                    </h2>
+                    <p class="mt-4 text-dark-300 text-lg max-w-xl mx-auto">
+                        A selection of things I've designed, developed, and shipped.
+                    </p>
+                </div>
+
+                <!-- Project Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    
+                    <!-- Card 1 -->
+                    <div class="reveal reveal-delay-1 project-card group bg-dark-800/50 border border-dark-600/40 rounded-2xl overflow-hidden cursor-pointer">
+                        <div class="relative overflow-hidden">
+                            <img src="http://static.photos/technology/640x360/201" alt="Project 1" class="w-full h-48 sm:h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-800/80 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-accent/20 text-accent-light text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border border-accent/20">Web App</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-dark-50 mb-2">CloudSync Dashboard</h3>
+                            <p class="text-dark-300 text-sm leading-relaxed mb-4">A real-time analytics dashboard for cloud infrastructure monitoring with intuitive data visualization.</p>
+                            <a href="#" class="inline-flex items-center gap-1.5 text-accent text-sm font-medium group/link">
+                                View Project
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 view-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="reveal reveal-delay-2 project-card group bg-dark-800/50 border border-dark-600/40 rounded-2xl overflow-hidden cursor-pointer">
+                        <div class="relative overflow-hidden">
+                            <img src="http://static.photos/minimal/640x360/302" alt="Project 2" class="w-full h-48 sm:h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-800/80 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-green-500/20 text-green-400 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border border-green-500/20">Mobile</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-dark-50 mb-2">FinFlow Tracker</h3>
+                            <p class="text-dark-300 text-sm leading-relaxed mb-4">A personal finance management app with smart budgeting, expense tracking, and actionable insights.</p>
+                            <a href="#" class="inline-flex items-center gap-1.5 text-accent text-sm font-medium group/link">
+                                View Project
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 view-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="reveal reveal-delay-3 project-card group bg-dark-800/50 border border-dark-600/40 rounded-2xl overflow-hidden cursor-pointer md:col-span-2 lg:col-span-1">
+                        <div class="relative overflow-hidden">
+                            <img src="http://static.photos/abstract/640x360/403" alt="Project 3" class="w-full h-48 sm:h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-800/80 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-amber-500/20 text-amber-400 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border border-amber-500/20">AI / ML</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-dark-50 mb-2">NeuralWrite AI</h3>
+                            <p class="text-dark-300 text-sm leading-relaxed mb-4">An AI-powered writing assistant that generates, edits, and refines content using large language models.</p>
+                            <a href="#" class="inline-flex items-center gap-1.5 text-accent text-sm font-medium group/link">
+                                View Project
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 view-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="section-divider mx-auto max-w-4xl"></div>
+
+        <!-- ==================== INTERNSHIPS ==================== -->
+        <section id="internships" class="py-24 sm:py-32 lg:py-40">
+            <div class="mx-auto max-w-6xl px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="reveal text-center mb-16 sm:mb-20">
+                    <p class="text-accent font-medium text-sm tracking-wide uppercase mb-3">Experience</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-dark-50">
+                        Internships
+                    </h2>
+                    <p class="mt-4 text-dark-300 text-lg max-w-xl mx-auto">
+                        Where I've contributed, learned, and grown as a professional.
+                    </p>
+                </div>
+
+                <!-- Timeline -->
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative">
+                        <!-- Vertical line -->
+                        <div class="absolute left-6 sm:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-accent/40 via-dark-500/60 to-transparent"></div>
+
+                        <!-- Entry 1 -->
+                        <div class="reveal reveal-delay-1 relative flex gap-6 sm:gap-8 mb-12 sm:mb-16">
+                            <!-- Timeline dot -->
+                            <div class="flex-shrink-0 relative z-10">
+                                <div class="timeline-dot w-12 h-12 sm:w-16 sm:h-16 bg-dark-800 border-2 border-accent/40 rounded-2xl flex items-center justify-center">
+                                    <i data-lucide="building-2" class="w-5 h-5 sm:w-6 sm:h-6 text-accent"></i>
+                                </div>
+                            </div>
+                            <!-- Content -->
+                            <div class="flex-1 pb-2">
+                                <div class="bg-dark-800/40 border border-dark-600/30 rounded-2xl p-6 sm:p-8 hover:border-accent/20 transition-colors duration-400">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                                        <h3 class="text-xl sm:text-2xl font-semibold text-dark-50">Software Engineering Intern</h3>
+                                        <span class="text-accent text-sm font-medium bg-accent/10 px-3 py-1 rounded-full w-fit">Jun — Aug 2024</span>
+                                    </div>
+                                    <p class="text-accent-light font-medium mb-3">TechNova Inc.</p>
+                                    <p class="text-dark-300 text-sm sm:text-base leading-relaxed">
+                                        Developed scalable microservices for the platform's core API, improving response times by 35%. Collaborated with cross-functional teams to design and implement new feature modules using React and Node.js.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-4">
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">React</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">Node.js</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">PostgreSQL</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">AWS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entry 2 -->
+                        <div class="reveal reveal-delay-2 relative flex gap-6 sm:gap-8">
+                            <!-- Timeline dot -->
+                            <div class="flex-shrink-0 relative z-10">
+                                <div class="timeline-dot w-12 h-12 sm:w-16 sm:h-16 bg-dark-800 border-2 border-accent/40 rounded-2xl flex items-center justify-center">
+                                    <i data-lucide="palette" class="w-5 h-5 sm:w-6 sm:h-6 text-accent"></i>
+                                </div>
+                            </div>
+                            <!-- Content -->
+                            <div class="flex-1 pb-2">
+                                <div class="bg-dark-800/40 border border-dark-600/30 rounded-2xl p-6 sm:p-8 hover:border-accent/20 transition-colors duration-400">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                                        <h3 class="text-xl sm:text-2xl font-semibold text-dark-50">UX Design Intern</h3>
+                                        <span class="text-accent text-sm font-medium bg-accent/10 px-3 py-1 rounded-full w-fit">Jun — Aug 2023</span>
+                                    </div>
+                                    <p class="text-accent-light font-medium mb-3">Pixel & Code Studio</p>
+                                    <p class="text-dark-300 text-sm sm:text-base leading-relaxed">
+                                        Led the redesign of the company's flagship product's onboarding flow, resulting in a 28% increase in user activation. Conducted user research, built wireframes and prototypes, and presented design solutions to stakeholders.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-4">
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">Figma</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">User Research</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">Prototyping</span>
+                                        <span class="text-xs font-medium text-dark-300 bg-dark-700/60 px-2.5 py-1 rounded-md">Design Systems</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="section-divider mx-auto max-w-4xl"></div>
+
+        <!-- ==================== CONTACT ==================== -->
+        <section id="contact" class="py-24 sm:py-32 lg:py-40">
+            <div class="mx-auto max-w-6xl px-6 lg:px-8">
+                <div class="reveal text-center">
+                    <p class="text-accent font-medium text-sm tracking-wide uppercase mb-3">Get in Touch</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-dark-50 mb-6">
+                        Let's Connect
+                    </h2>
+                    <p class="text-dark-300 text-lg max-w-md mx-auto mb-12 sm:mb-16">
+                        I'm always open to new opportunities, collaborations, or just a friendly conversation.
+                    </p>
+
+                    <!-- Social Icons -->
+                    <div class="flex items-center justify-center gap-6 sm:gap-8">
+                        <!-- GitHub -->
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-icon w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-dark-800/60 border border-dark-600/40 flex items-center justify-center text-dark-200 hover:text-dark-950 hover:border-accent/30" aria-label="GitHub">
+                            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                        <!-- LinkedIn -->
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-dark-800/60 border border-dark-600/40 flex items-center justify-center text-dark-200 hover:text-dark-950 hover:border-accent/30" aria-label="LinkedIn">
+                            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <!-- Instagram -->
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-dark-800/60 border border-dark-600/40 flex items-center justify-center text-dark-200 hover:text-dark-950 hover:border-accent/30" aria-label="Instagram">
+                            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- Email link -->
+                    <div class="mt-10 sm:mt-14">
+                        <a href="mailto:hello@example.com" class="inline-flex items-center gap-2 text-dark-300 hover:text-accent transition-colors duration-300 text-sm sm:text-base">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            hello@example.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-dark-700/40">
+        <div class="mx-auto max-w-6xl px-6 lg:px-8 py-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-dark-400 text-sm">&copy; 2025 Portfolio. All rights reserved.</p>
+                <p class="text-dark-500 text-xs">Designed with precision and care.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // ============ NAVIGATION ============
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section[id]');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        // Sticky nav background on scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            
+            if (currentScroll > 50) {
+                navbar.style.backgroundColor = 'rgba(5, 5, 5, 0.8)';
+                navbar.style.backdropFilter = 'blur(20px)';
+                navbar.style.webkitBackdropFilter = 'blur(20px)';
+                navbar.style.borderBottom = '1px solid rgba(44, 44, 46, 0.4)';
+            } else {
+                navbar.style.backgroundColor = 'transparent';
+                navbar.style.backdropFilter = 'none';
+                navbar.style.webkitBackdropFilter = 'none';
+                navbar.style.borderBottom = '1px solid transparent';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Active nav link on scroll
+        function updateActiveNav() {
+            const scrollPos = window.scrollY + 200;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        link.classList.remove('text-dark-50');
+                        link.classList.add('text-dark-300');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                            link.classList.add('text-dark-50');
+                            link.classList.remove('text-dark-300');
+                        }
+                    });
+                }
+            });
+        }
+        window.addEventListener('scroll', updateActiveNav);
+
+        // Mobile menu
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ============ SCROLL REVEAL ============
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -60px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ============ SMOOTH SCROLL ============
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navHeight = navbar.offsetHeight;
+                    const targetPos = target.offsetTop - navHeight;
+                    window.scrollTo({
+                        top: targetPos,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Initial check
+        updateActiveNav();
+    </script>
+</body>
+</html>
