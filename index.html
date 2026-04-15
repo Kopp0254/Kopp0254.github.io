@@ -130,12 +130,24 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Subtle background grid */
+        /* Subtle background grid — dim green matching the accent theme */
         .bg-grid {
-            background-image: 
-                linear-gradient(rgba(156, 175, 136, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(156, 175, 136, 0.03) 1px, transparent 1px);
+            background-image:
+                linear-gradient(rgba(156, 175, 136, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 175, 136, 0.07) 1px, transparent 1px);
             background-size: 64px 64px;
+        }
+
+        /* Brighter grid intersection dots for extra depth */
+        .bg-grid::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle, rgba(156, 175, 136, 0.12) 1px, transparent 1px);
+            background-size: 64px 64px;
+            background-position: 0 0;
+            pointer-events: none;
         }
 
         /* Gradient orbs */
@@ -338,14 +350,14 @@
                             <img src="http://static.photos/technology/640x360/201" alt="Project 1" class="w-full h-48 sm:h-52 object-cover transition-transform duration-500 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-dark-800/80 to-transparent"></div>
                             <div class="absolute top-4 left-4">
-                                <span class="bg-accent/20 text-accent-light text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border border-accent/20">Web App</span>
+                                <span class="bg-accent/20 text-accent-light text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border border-accent/20">Android App</span>
                             </div>
                         </div>
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-dark-50 mb-2">CloudSync Dashboard</h3>
-                            <p class="text-dark-300 text-sm leading-relaxed mb-4">A real-time analytics dashboard for cloud infrastructure monitoring with intuitive data visualization.</p>
+                            <h3 class="text-lg font-semibold text-dark-50 mb-2">SleepSync</h3>
+                            <p class="text-dark-300 text-sm leading-relaxed mb-4">A real time sleep tracking app with personalized insights and wellness recommendations. Made with a team of 6 developers with Agile through the Dart language.</p>
                             <a href="#" class="inline-flex items-center gap-1.5 text-accent text-sm font-medium group/link">
-                                View Project
+                                Product in progress
                                 <i data-lucide="arrow-right" class="w-3.5 h-3.5 view-arrow"></i>
                             </a>
                         </div>
