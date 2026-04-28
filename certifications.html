@@ -344,12 +344,13 @@
         // ============================================================
         const certifications = [
             {
-                title: "Certification Title",
-                issuer: "Issuing Organization",
-                year: "2025",
-                category: "Coming Soon",
+                title: "Claude 101",
+                issuer: "Anthropic Education",
+                year: "2026",
+                category: "Artificial Intelligence",
                 description: "Add your certification details here. Describe what you learned, the skills covered, and why it matters to your career.",
-                credentialUrl: "#",
+                credentialUrl: "claude101Certification.pdf",
+                image: "claude101Certification.pdf",
                 icon: "award",
                 color: "purple"
             },
@@ -432,10 +433,12 @@
             <div class="reveal reveal-delay-${delay <= 6 ? delay : 1} cert-card group bg-dark-800/50 border border-dark-600/40 rounded-2xl overflow-hidden cursor-pointer" data-category="${cert.category}">
                 <!-- Icon banner -->
                 <div class="relative overflow-hidden">
-                    <div class="w-full h-44 sm:h-48 bg-gradient-to-br from-dark-700 to-dark-800 flex items-center justify-center">
+                    <div class="w-full h-44 sm:h-48 ${cert.image ? '' : 'bg-gradient-to-br from-dark-700 to-dark-800'} flex items-center justify-center">
+                        ${cert.image ? `<embed src="${cert.image}" type="application/pdf" width="100%" height="100%" />` : `
                         <div class="cert-icon-wrap w-24 h-24 rounded-2xl ${c.bg} border ${c.border} flex items-center justify-center">
                             <i data-lucide="${cert.icon}" class="w-12 h-12 ${c.text}"></i>
                         </div>
+                        `}
                     </div>
                     <div class="absolute top-4 left-4">
                         <span class="text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm border ${c.badge}">${cert.category}</span>
