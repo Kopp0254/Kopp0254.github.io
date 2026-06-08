@@ -178,6 +178,21 @@
             background: linear-gradient(135deg, rgba(156,175,136,0.2), rgba(125,148,104,0.1));
             border: 1px solid rgba(156,175,136,0.25);
         }
+        /* Highlighted cert (when navigated from index) */
+        .cert-card.highlight {
+            border-color: rgba(156,175,136,0.6) !important;
+            box-shadow: 0 30px 80px rgba(156,175,136,0.12), 0 6px 30px rgba(0,0,0,0.45);
+            transform: translateY(-6px);
+            position: relative;
+            z-index: 5;
+            transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
+        }
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 30px 80px rgba(156,175,136,0.12); }
+            50% { box-shadow: 0 36px 92px rgba(156,175,136,0.16); }
+            100% { box-shadow: 0 30px 80px rgba(156,175,136,0.12); }
+        }
+        .cert-card.highlight.pulse { animation: highlight-pulse 1.8s ease-in-out 2; }
     </style>
 </head>
 <body class="bg-dark-950 font-inter">
@@ -357,10 +372,10 @@
                 title: "Claude Code 101",
                 issuer: "Anthropic Education",
                 year: "2026",
-                category: "Coming Soon",
-                description: "Add your certification details here. Describe what you learned, the skills covered, and why it matters to your career.",
-                credentialUrl: "#",
-                icon: "shield-check",
+                category: "Artificial Intelligence",
+                description: "The basics of Claude Code AI, including how to write effective prompts and integrate AI into your development workflow. Includes skills, projects, and connectors specific to coding with AI. This information taught me how to use Claude Code to boost my productivity as a software engineer and how to integrate it into my workflow.",
+                credentialUrl: "claudeCodeCertification.pdf",
+                image: "claudeCodeCertification.pdf",
                 color: "blue"
             },
             {
@@ -506,6 +521,48 @@
 
         buildFilters();
         renderCerts();
+
+        // If a highlight query param is present (e.g. ?highlight=Claude%20Code%20101)
+        // find the rendered card with the same title, add a highlight class, and scroll to it.
+        function highlightCertByTitle(title) {
+            if (!title) return;
+            const grid = document.getElementById('certsGrid');
+            if (!grid) return;
+            const cards = Array.from(grid.querySelectorAll('.cert-card'));
+            const normalized = t => t.replace(/\s+/g, ' ').trim();
+            const target = cards.find(card => {
+                const h = card.querySelector('h3');
+                return h && normalized(h.textContent) === normalized(title);
+            });
+            if (target) {
+                // Remove existing highlights
+                cards.forEach(c => c.classList.remove('highlight', 'pulse'));
+                target.classList.add('highlight');
+                // give the pulse animation a moment to apply
+                setTimeout(() => target.classList.add('pulse'), 80);
+                // scroll to center of viewport
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+                // remove highlight after a while so it doesn't persist forever
+                setTimeout(() => target.classList.remove('pulse'), 2500);
+            }
+        }
+
+        (function checkHighlightParam() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const h = params.get('highlight');
+                if (h) {
+                    // decode, replace '+' with spaces if needed
+                    const title = decodeURIComponent(h.replace(/\+/g, ' '));
+                    // run after a slight delay to ensure cards are rendered
+                    setTimeout(() => highlightCertByTitle(title), 120);
+                }
+            } catch (e) {
+                // ignore
+            }
+        })();
 
         // Filter click handler
         document.getElementById('filterBar').addEventListener('click', e => {
